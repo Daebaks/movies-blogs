@@ -70,11 +70,11 @@ const Navbar = () => {
             checked={value}
           />
           <Link to="/">HOME</Link>
-          <Link to={{ pathname: '#' }} target="_blank">
+          <Link to={{ pathname: 'https://aaweb.dev' }} target="_blank">
             PORTFOLIO
           </Link>
           <Link
-            to={{ pathname: 'https://github.com/Daebaks/react-mv-bg' }}
+            to={{ pathname: 'https://github.com/Daebaks/movies-blogs' }}
             target="_blank"
           >
             CODE
