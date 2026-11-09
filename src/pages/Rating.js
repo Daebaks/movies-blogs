@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { collection, addDoc } from 'firebase/firestore';
 import Mov from '../components/Mov';
@@ -7,38 +7,32 @@ import { db } from '../firebase-config';
 const Rating = () => {
   const history = useHistory();
   const location = useLocation();
-  const [id, setId] = useState('');
-  const [arr, setArr] = useState([]);
+  const movie = location.state && location.state.movie;
   const [review, setRev] = useState('');
-  const [title, setT] = useState('');
-  const [image, setI] = useState('');
-  const [year, setY] = useState('');
   const [overall, setOverall] = useState('');
-  const collectionRef = collection(db, 'movs');
-
-  useEffect(() => {
-    setId(location.state.theKey);
-    setArr(location.state.theArray);
-    arr.forEach((e) => {
-      if (e.key === id) {
-        setT(e.title);
-        setI(e.image);
-        setY(e.year);
-      }
-    });
-  }, [arr, id, location.state.theKey, location.state.theArray]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
 
   const submitR = async (e) => {
     e.preventDefault();
-    await addDoc(collectionRef, {
-      title: title,
-      year: year,
-      review: review,
-      image: image,
-      overall: overall,
-    }).then(() => {
+    setIsSubmitting(true);
+    setSubmitError(null);
+    try {
+      await addDoc(collection(db, 'movs'), {
+        title: movie.Title,
+        year: movie.Year,
+        review,
+        image: movie.Poster,
+        overall,
+      });
       history.push('/');
-    });
+    } catch (error) {
+      setSubmitError(
+        error instanceof Error ? error.message : 'Failed to save your rating.'
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleRadio = (e) => {
@@ -46,13 +40,16 @@ const Rating = () => {
   };
   return (
     <>
-      {title === '' ? (
-        <p>CHOOSE A MOVIE FIRST!!!</p>
+      {!movie ? (
+        <div className="create">
+          <p>Choose a movie before submitting a rating.</p>
+          <button onClick={() => history.push('/movies')}>SEARCH MOVIES</button>
+        </div>
       ) : (
         <div className="create">
           <h1>RATE THIS MOVIE</h1>
           <div className="rate-mov">
-            <Mov title={title} year={year} image={image} />
+            <Mov title={movie.Title} year={movie.Year} image={movie.Poster} />
           </div>
           <form onSubmit={submitR}>
             <div className="create-big">
@@ -130,9 +127,12 @@ const Rating = () => {
                 </tbody>
               </table>
             </div>
+            {submitError && <p role="alert">{submitError}</p>}
             <br />
             <br />
-            <button>SUBMIT RATING</button>
+            <button disabled={isSubmitting}>
+              {isSubmitting ? 'SAVING...' : 'SUBMIT RATING'}
+            </button>
           </form>
           <button onClick={() => history.push('/movies')}>BACK</button>
           <button onClick={() => history.push('/')}>HOME</button>

@@ -6,33 +6,30 @@ import Mov from '../components/Mov';
 
 
 const Movies = () => {
-  
   const [clicked, setClicked] = useState(false);
   const [userInput, setUserInput] = useState('');
-  const moviesObjectsArray = [];
-
+  const [searchTerm, setSearchTerm] = useState('');
   const { error, isPending, data } = useFetch(
-    `https://www.omdbapi.com/?s=${userInput}&apikey=${process.env.REACT_APP_API_KEY}`
+    searchTerm
+      ? `https://www.omdbapi.com/?s=${encodeURIComponent(
+          searchTerm
+        )}&apikey=${process.env.REACT_APP_API_KEY}`
+      : null
   );
   const history = useHistory();
-
-  !error &&
-    data &&
-    data.Search &&
-    data.Search.forEach((e) => {
-      const obj = {
-        key: Math.random(),
-        title: e.Title,
-        image: e.Poster,
-        year: e.Year,
-      };
-      moviesObjectsArray.push(obj);
-    });
+  const movies = data && data.Search ? data.Search : [];
+  const searchError = error || (data && data.Response === 'False' && data.Error);
   const find = () => {
+    if (!userInput.trim()) {
+      return;
+    }
+    setSearchTerm(userInput.trim());
     setClicked(true);
   };
   const findEnter = (e) => {
-    e.key === 'Enter' && setClicked(true);
+    if (e.key === 'Enter') {
+      find();
+    }
   };
   const getUserInput = (e) => {
     setUserInput(e.target.value);
@@ -40,13 +37,13 @@ const Movies = () => {
   const goBack = () => {
     setClicked(false);
     setUserInput('');
+    setSearchTerm('');
   };
-  const goToRate = (id) => {
+  const goToRate = (movie) => {
     history.push({
       pathname: '/rating',
       state: {
-        theKey: id,
-        theArray: moviesObjectsArray,
+        movie,
       },
     });
   };
@@ -55,36 +52,40 @@ const Movies = () => {
       {clicked ? (
         <div>
           {isPending && <h1>Please wait...</h1>}
-          {error && <h1>{error}</h1>}
+          {searchError && <h1>{searchError}</h1>}
 
-          {moviesObjectsArray.length === 0 && (
+          {!isPending && !searchError && movies.length === 0 && (
             <div>
               <h1>No such movie</h1>
-              <button onClick={goBack}>Go Back</button>
               <button onClick={() => history.push('/')}>HOME</button>
             </div>
           )}
           <div className="grid">
-            {moviesObjectsArray.map((e, i) => (
-              <div
-                key={e.title + e.year + e.image + Math.random()}
-                className="search-result"
-              >
-                <Mov title={e.title} year={e.year} image={e.image} />
-                <button onClick={() => goToRate(e.key)}>Rate movie</button>
+            {movies.map((movie) => (
+              <div key={movie.imdbID} className="search-result">
+                <Mov
+                  title={movie.Title}
+                  year={movie.Year}
+                  image={movie.Poster}
+                />
+                <button onClick={() => goToRate(movie)}>Rate movie</button>
               </div>
             ))}
           </div>
           <br />
-          {moviesObjectsArray.length !== 0 && (
-            <button onClick={goBack}>Go Back</button>
-          )}
+          <button onClick={goBack}>Go Back</button>
         </div>
       ) : (
         <div>
           <div className="create-big">
-            <label>Search a movie:</label>
-            <input type="text" onChange={getUserInput} onKeyDown={findEnter} />
+            <label htmlFor="movie-search">Search a movie:</label>
+            <input
+              id="movie-search"
+              type="text"
+              value={userInput}
+              onChange={getUserInput}
+              onKeyDown={findEnter}
+            />
           </div>
           <button onClick={find}>Search</button>
           <button onClick={() => history.push('/')}>HOME</button>

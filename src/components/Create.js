@@ -7,18 +7,24 @@ const Create = () => {
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [author, setAuthor] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
   const history = useHistory();
-  const collectionRef = collection(db, 'blogs');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await addDoc(collectionRef, {
-      title: title,
-      body: body,
-      author: author,
-    }).then(() => {
+    setIsSubmitting(true);
+    setSubmitError(null);
+    try {
+      await addDoc(collection(db, 'blogs'), { title, body, author });
       history.push('/');
-    });
+    } catch (error) {
+      setSubmitError(
+        error instanceof Error ? error.message : 'Failed to save your blog.'
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
   return (
     <div className="create">
@@ -46,7 +52,10 @@ const Create = () => {
             onChange={(e) => setAuthor(e.target.value)}
           />
         </div>
-        <button>Add Blog</button>
+        {submitError && <p role="alert">{submitError}</p>}
+        <button disabled={isSubmitting}>
+          {isSubmitting ? 'Saving...' : 'Add Blog'}
+        </button>
       </form>
     </div>
   );

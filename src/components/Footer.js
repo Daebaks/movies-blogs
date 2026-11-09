@@ -5,7 +5,6 @@ import {
   faYoutube,
   faTwitter,
 } from '@fortawesome/free-brands-svg-icons';
-import { Link } from 'react-router-dom';
 import '../styles/index.css';
 
 const Footer = () => (
@@ -13,43 +12,46 @@ const Footer = () => (
     <div className="footer">
       <ul className="social-list">
         <li className="social-list__item">
-          <Link
+          <a
             className="social-list__link"
-            to={{ pathname: 'https://github.com/daebaks' }}
+            href="https://github.com/daebaks"
             target="_blank"
+            rel="noopener noreferrer"
           >
             <FontAwesomeIcon
               icon={faGithub}
               className="footer-icons"
               size="2x"
             />
-          </Link>
+          </a>
         </li>
         <li className="social-list__item">
-          <Link
+          <a
             className="social-list__link"
-            to={{ pathname: 'https://youtube.com' }}
+            href="https://youtube.com"
             target="_blank"
+            rel="noopener noreferrer"
           >
             <FontAwesomeIcon
               icon={faYoutube}
               className="footer-icons"
               size="2x"
             />
-          </Link>
+          </a>
         </li>
         <li className="social-list__item">
-          <Link
+          <a
             className="social-list__link"
-            to={{ pathname: 'https://twitter.com' }}
+            href="https://twitter.com"
             target="_blank"
+            rel="noopener noreferrer"
           >
             <FontAwesomeIcon
               icon={faTwitter}
               className="footer-icons"
               size="2x"
             />
-          </Link>
+          </a>
         </li>
       </ul>
     </div>

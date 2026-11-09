@@ -2,53 +2,31 @@ import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import '../styles/index.css';
 
+const getInitialTheme = () => {
+  try {
+    return window.localStorage.getItem('theme') === 'dark';
+  } catch (error) {
+    console.error('Unable to read the saved theme.', error);
+    return false;
+  }
+};
+
 const Navbar = () => {
-  function getLocalStorageItem(key, initialValue) {
-    try {
-      // Get from local storage by key
-      const item = window.localStorage.getItem(key);
-      // Parse stored json or if none return initialValue
-      return item ? JSON.parse(item) : initialValue;
-    } catch (error) {
-      // If error also return initialValue
-      console.log(error);
-      return initialValue;
-    }
-  }
-
-  function setLocalStorageItem(key, value) {
-    window.localStorage.setItem(key, JSON.stringify(value));
-    try {
-      // Convert the value to a JSON string
-      const item = JSON.stringify(value);
-      // Save to local storage
-      window.localStorage.setItem(key, item);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  const [value, setvalue] = useState(getLocalStorageItem('val', ''));
+  const [value, setValue] = useState(getInitialTheme);
   const history = useHistory();
 
   useEffect(() => {
-    const currentTheme = localStorage.getItem('theme')
-      ? localStorage.getItem('theme')
-      : null;
-    document.documentElement.setAttribute('data-theme', currentTheme);
-  });
+    const theme = value ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', theme);
+    try {
+      window.localStorage.setItem('theme', theme);
+    } catch (error) {
+      console.error('Unable to save the selected theme.', error);
+    }
+  }, [value]);
 
   const handleChange = (evt) => {
-    const val = evt.target.checked;
-    setvalue(val);
-    setLocalStorageItem('val', val);
-    if (evt.target.checked) {
-      document.documentElement.setAttribute('data-theme', 'dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.setAttribute('data-theme', 'light');
-      localStorage.setItem('theme', 'light');
-    }
+    setValue(evt.target.checked);
   };
 
   return (
@@ -70,15 +48,16 @@ const Navbar = () => {
             checked={value}
           />
           <Link to="/">HOME</Link>
-          <Link to={{ pathname: 'https://aaweb.dev' }} target="_blank">
+          <a href="https://aaweb.dev" target="_blank" rel="noopener noreferrer">
             PORTFOLIO
-          </Link>
-          <Link
-            to={{ pathname: 'https://github.com/Daebaks/movies-blogs' }}
+          </a>
+          <a
+            href="https://github.com/Daebaks/movies-blogs"
             target="_blank"
+            rel="noopener noreferrer"
           >
             CODE
-          </Link>
+          </a>
           <Link to="/about">ABOUT</Link>
         </div>
       </nav>
