@@ -12,9 +12,12 @@ const Home = () => {
     <>
       <div className="main-container">
         <div className="main-container-mov">
-          <Link className="linky" to="/movies">
-            Click to add new rating
-          </Link>
+          <div className="panel-heading">
+            <h2>Movie ratings</h2>
+            <Link className="linky" to="/movies">
+              Add a rating
+            </Link>
+          </div>
           <div className="home-1">
             {err && <div>{err}</div>}
             {isP && <div>Please Wait...</div>}
@@ -23,9 +26,12 @@ const Home = () => {
         </div>
 
         <div className="main-container-blog">
-          <Link className="linky" to="/create">
-            Click to create new blog
-          </Link>
+          <div className="panel-heading">
+            <h2>Latest stories</h2>
+            <Link className="linky" to="/create">
+              Write a story
+            </Link>
+          </div>
           <div className="home-1">
             {error && <div>{error}</div>}
             {isPending && <div>Please Wait...</div>}

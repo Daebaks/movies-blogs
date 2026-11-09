@@ -16,10 +16,10 @@ const MovList = ({ movs }) => {
               width="65"
               height="100"
               onError={defaultSrc}
-              alt="movie-poster"
+              alt={`${mov.title} poster`}
             />
-            <h2>Title: {mov.title}</h2>
-            <p>Year: {mov.year}</p>
+            <h2>{mov.title}</h2>
+            <p>{mov.year}</p>
             <p>Rating: {mov.overall}</p>
           </Link>
         </div>

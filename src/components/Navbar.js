@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import '../styles/index.css';
 
 const getInitialTheme = () => {
@@ -13,7 +13,6 @@ const getInitialTheme = () => {
 
 const Navbar = () => {
   const [value, setValue] = useState(getInitialTheme);
-  const history = useHistory();
 
   useEffect(() => {
     const theme = value ? 'dark' : 'light';
@@ -30,38 +29,45 @@ const Navbar = () => {
   };
 
   return (
-    <>
+    <nav className="navbar" aria-label="Main navigation">
+      <Link className="brand" to="/">
+        Movies &amp; Stories
+      </Link>
       <label htmlFor="toggle" className="toggle">
-        &#9776;
+        <span aria-hidden="true">&#9776;</span>
+        <span className="sr-only">Toggle navigation</span>
       </label>
-      <nav className="navbar">
-        <h1 onClick={() => history.push('/')}>
-          Movies and Blogs (with ReactJS)
-        </h1>
-        <input type="checkbox" className="nav-box" id="toggle" />
-        <div className="links">
-          {/** theme **/}
+      <input
+        type="checkbox"
+        className="nav-box"
+        id="toggle"
+        aria-label="Toggle navigation menu"
+      />
+      <div className="links">
+        <label className="theme-toggle" htmlFor="theme-toggle">
+          <span>Dark mode</span>
           <input
+            id="theme-toggle"
             className="l"
             type="checkbox"
             onChange={handleChange}
             checked={value}
           />
-          <Link to="/">HOME</Link>
-          <a href="https://aaweb.dev" target="_blank" rel="noopener noreferrer">
-            PORTFOLIO
-          </a>
-          <a
-            href="https://github.com/Daebaks/movies-blogs"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            CODE
-          </a>
-          <Link to="/about">ABOUT</Link>
-        </div>
-      </nav>
-    </>
+        </label>
+        <Link to="/">HOME</Link>
+        <a href="https://aaweb.dev" target="_blank" rel="noopener noreferrer">
+          PORTFOLIO
+        </a>
+        <a
+          href="https://github.com/Daebaks/movies-blogs"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          CODE
+        </a>
+        <Link to="/about">ABOUT</Link>
+      </div>
+    </nav>
   );
 };
 

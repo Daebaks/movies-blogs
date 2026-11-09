@@ -8,20 +8,21 @@ import {
 import '../styles/index.css';
 
 const Footer = () => (
-  <>
-    <div className="footer">
-      <ul className="social-list">
+  <footer className="footer">
+    <div className="footer-content">
+      <p className="footer-note">Movies &amp; Stories · Made for fans.</p>
+      <ul className="social-list" aria-label="Social links">
         <li className="social-list__item">
           <a
             className="social-list__link"
             href="https://github.com/daebaks"
             target="_blank"
             rel="noopener noreferrer"
+            aria-label="GitHub"
           >
             <FontAwesomeIcon
               icon={faGithub}
               className="footer-icons"
-              size="2x"
             />
           </a>
         </li>
@@ -31,11 +32,11 @@ const Footer = () => (
             href="https://youtube.com"
             target="_blank"
             rel="noopener noreferrer"
+            aria-label="YouTube"
           >
             <FontAwesomeIcon
               icon={faYoutube}
               className="footer-icons"
-              size="2x"
             />
           </a>
         </li>
@@ -45,17 +46,17 @@ const Footer = () => (
             href="https://twitter.com"
             target="_blank"
             rel="noopener noreferrer"
+            aria-label="Twitter"
           >
             <FontAwesomeIcon
               icon={faTwitter}
               className="footer-icons"
-              size="2x"
             />
           </a>
         </li>
       </ul>
     </div>
-  </>
+  </footer>
 );
 
 export default Footer;

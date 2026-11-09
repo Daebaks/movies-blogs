@@ -7,11 +7,11 @@ const Mov = (props) => {
   };
   return (
     <div className="mov-comp">
-      <h1>Title: {props.title}</h1>
-      <h1>Year: {props.year}</h1>
+      <h2 title={props.title}>{props.title}</h2>
+      <p>{props.year}</p>
       <img
         src={props.image}
-        alt="no-poster"
+        alt={`${props.title} poster`}
         onError={defaultSrc}
         width="320"
         height="400"
